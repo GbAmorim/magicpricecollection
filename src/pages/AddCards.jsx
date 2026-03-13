@@ -14,7 +14,7 @@ import {
 } from "../services/scryfall";
 import { getUsdToBrl } from "../services/fx";
 import CardItem from "../components/CardItem";
-import Input from "../components/Input";
+import Input from "../components/input";
 import Button from "../components/Button";
 import AdvancedCardImport from "../components/AdvancedCardImport";
 import { parseDeckList } from "../utils/parseDeckList";
