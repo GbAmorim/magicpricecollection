@@ -1,16 +1,46 @@
-# React + Vite
+# MTG Price Collection
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de gestão de cards para colecionadores de Magic: The Gathering, focado em controle patrimonial e exportação de dados.
 
-Currently, two official plugins are available:
+## Funcionalidades Principais
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Gestão de Coleções: Criação, edição e exclusão de múltiplas coleções.
+- Controle de Patrimônio: Opção de ocultar coleções específicas do somatório global de ativos (recurso "excludeFromTotal").
+- Busca Avançada: Importação de listas de cartas em lote com processamento automático de quantidades.
+- Persistência de Dados: Recuperação automática do estado da última busca via parâmetros de URL/LocalStorage.
+- Exportação de Dados: Geração de relatórios em PDF, CSV e Lista TXT (formato decklist).
 
-## React Compiler
+## Stack Técnica
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Frontend: React.js + Vite
+- Estilização: Tailwind CSS
+- Ícones: Lucide React
+- Backend: Firebase (Firestore & Auth)
+- Hosting: Vercel
 
-## Expanding the ESLint configuration
+## Configuração e Instalação
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Instale as dependências:
+npm install
+
+2. Configure as variáveis de ambiente (.env.local):
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+
+3. Inicie o ambiente de desenvolvimento:
+npm run dev
+
+## Segurança e Deploy
+
+- Variáveis de Ambiente: O projeto utiliza o prefixo VITE_ para proteção de chaves no frontend.
+- Authorized Domains: Para o funcionamento do login em produção, o domínio da Vercel deve ser cadastrado no console do Firebase Authentication.
+- Git Compliance: Arquivos sensíveis (.env) são ignorados via .gitignore.
+
+## Estrutura de Dados (Firestore)
+
+- users/{userId}/collections: Metadados das coleções.
+- users/{userId}/collections/{collectionId}/cards: Itens individuais e precificação.
