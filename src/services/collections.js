@@ -19,6 +19,7 @@ export const createCollection = async (userId, name) => {
     const colRef = collection(db, `users/${userId}/collections`);
     return await addDoc(colRef, {
         name,
+        excludeFromTotal: false,
         createdAt: serverTimestamp(),
     });
 };
@@ -37,6 +38,15 @@ export const getUserCollections = async (userId) => {
 export const updateCollectionName = async (userId, collectionId, newName) => {
     const docRef = doc(db, `users/${userId}/collections`, collectionId);
     return await updateDoc(docRef, { name: newName });
+};
+
+export const toggleCollectionExcludeFromTotal = async (
+    userId,
+    collectionId,
+    excludeFromTotal,
+) => {
+    const docRef = doc(db, `users/${userId}/collections`, collectionId);
+    return await updateDoc(docRef, { excludeFromTotal });
 };
 
 export const deleteCollection = async (userId, collectionId) => {
@@ -215,8 +225,12 @@ export const getCollectionsWithSummary = async (userId, usdToBrl = 1) => {
 export const getGlobalInventory = async (userId, usdToBrl = 1) => {
     const collections = await getUserCollections(userId);
 
+    const visibleCollections = collections.filter(
+        (col) => !col.excludeFromTotal,
+    );
+
     const collectionResults = await Promise.all(
-        collections.map(async (col) => {
+        visibleCollections.map(async (col) => {
             const cards = await getCollectionCards(userId, col.id);
 
             return cards.map((card) => ({

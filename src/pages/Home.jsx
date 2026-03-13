@@ -1,13 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import {
     createCollection,
     deleteCollection,
     getCollectionsWithSummary,
     getGlobalInventory,
+    toggleCollectionExcludeFromTotal, // Nova função importada
 } from "../services/collections";
 import { getUsdToBrl } from "../services/fx";
-import { Plus, Folder, Trash2, Boxes, Wallet, RefreshCw } from "lucide-react";
+import {
+    Plus,
+    Folder,
+    Trash2,
+    Boxes,
+    Wallet,
+    RefreshCw,
+    Eye,
+    EyeOff,
+} from "lucide-react"; // Ícones adicionados
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import Input from "../components/input";
@@ -81,6 +91,18 @@ export default function Home() {
                 console.error("Erro ao excluir coleção:", error);
                 alert("Erro ao excluir coleção.");
             }
+        }
+    };
+
+    // Nova função para alternar a visibilidade no total
+    const handleToggleExclude = async (e, col) => {
+        e.preventDefault();
+        try {
+            const newValue = !col.excludeFromTotal;
+            await toggleCollectionExcludeFromTotal(user.uid, col.id, newValue);
+            load(); // Recarrega para atualizar o patrimônio total e o ícone
+        } catch (error) {
+            console.error("Erro ao alterar visibilidade:", error);
         }
     };
 
@@ -245,12 +267,35 @@ export default function Home() {
                                 </p>
                             </Link>
 
-                            <button
-                                onClick={(e) => handleDelete(e, col.id)}
-                                className="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-600 transition-colors cursor-pointer"
-                            >
-                                <Trash2 size={18} />
-                            </button>
+                            {/* Botões de Ação (Olho e Lixeira) */}
+                            <div className="absolute top-4 right-4 flex gap-2">
+                                <button
+                                    onClick={(e) => handleToggleExclude(e, col)}
+                                    title={
+                                        col.excludeFromTotal
+                                            ? "Incluir no patrimônio"
+                                            : "Excluir do patrimônio"
+                                    }
+                                    className={`p-2 transition-colors cursor-pointer ${
+                                        col.excludeFromTotal
+                                            ? "text-red-400 hover:text-red-600"
+                                            : "text-slate-300 hover:text-slate-600"
+                                    }`}
+                                >
+                                    {col.excludeFromTotal ? (
+                                        <EyeOff size={18} />
+                                    ) : (
+                                        <Eye size={18} />
+                                    )}
+                                </button>
+
+                                <button
+                                    onClick={(e) => handleDelete(e, col.id)}
+                                    className="p-2 text-slate-300 hover:text-red-600 transition-colors cursor-pointer"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>

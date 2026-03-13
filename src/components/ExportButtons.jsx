@@ -1,8 +1,9 @@
 import React from "react";
 import Button from "./Button";
-import { FileText, FileSpreadsheet } from "lucide-react";
+import { FileText, FileSpreadsheet, List } from "lucide-react";
 import { exportCardsToCsv } from "../utils/exportCsv";
 import { exportCardsToPdf } from "../utils/exportPdf";
+import { exportCardsToTxtList } from "../utils/exportList";
 
 export default function ExportButtons({
     items = [],
@@ -18,7 +19,12 @@ export default function ExportButtons({
                 variant="secondary"
                 disabled={disabled || !hasItems}
                 className="gap-2"
-                onClick={() => exportCardsToCsv(items, "lista-cards.csv")}
+                onClick={() =>
+                    exportCardsToCsv(
+                        items,
+                        `${collectionName || "colecao"}.csv`,
+                    )
+                }
             >
                 <FileSpreadsheet size={16} />
                 Exportar CSV
@@ -31,14 +37,30 @@ export default function ExportButtons({
                 className="gap-2"
                 onClick={() =>
                     exportCardsToPdf(items, {
-                        fileName: "lista-cards.pdf",
-                        title: "Relatório de Cards",
+                        fileName: `${collectionName || "colecao"}.pdf`,
+                        title: "Relatório da Coleção",
                         collectionName,
                     })
                 }
             >
                 <FileText size={16} />
                 Exportar PDF
+            </Button>
+
+            <Button
+                type="button"
+                variant="secondary"
+                disabled={disabled || !hasItems}
+                className="gap-2"
+                onClick={() =>
+                    exportCardsToTxtList(
+                        items,
+                        `${collectionName || "colecao"}-lista.txt`,
+                    )
+                }
+            >
+                <List size={16} />
+                Exportar lista
             </Button>
         </div>
     );
