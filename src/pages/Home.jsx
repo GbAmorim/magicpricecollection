@@ -10,7 +10,7 @@ import { getUsdToBrl } from "../services/fx";
 import { Plus, Folder, Trash2, Boxes, Wallet, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
-import Input from "../components/Input";
+import Input from "../components/input";
 import { formatMoney } from "../utils/money";
 
 export default function Home() {
